@@ -147,3 +147,85 @@ namespace TravelingSalesmanProblem.Engine
         #endregion
     }
 }
+
+        // OR function Training data
+        int[][][] ORtrainingData = new int[4][][] {
+            new int[][] { new int[] {0,0} , new int[] {0}},
+            new int[][] { new int[] {0,1} , new int[] {1}},
+            new int[][] { new int[] {1,0} , new int[] {1}},
+            new int[][] { new int[] {1,1} , new int[] {1}}
+        };
+        #endregion
+
+
+        #region Constructors
+        public Perceptron(PerceptronForm f)
+        {
+            form = f;
+        }
+        #endregion
+
+        #region Public Methods
+        public void AND()
+        {
+            // Start training loop
+            while (true)
+            {
+                int errorCount = 0;
+                // Loop over training data
+                for (int i = 0; i < ORtrainingData.Length; i++)
+                {
+                    Log("Starting weights: " + PrintWeights(weights), LogType.STATUS);
+                    // Calculate weighted input
+                    double weightedSum = 0;
+                    for (int ii = 0; ii < ORtrainingData[i][0].Length; ii++)
+                    {
+                        weightedSum += ORtrainingData[i][0][ii] * weights[ii];
+                    }
+
+                    // Calculate output
+                    int output = 0;
+                    if (threshold <= weightedSum)
+                    {
+                        output = 1;
+                    }
+
+                    Log("Target output: " + ORtrainingData[i][1][0] + ", "
+                            + "Actual Output: " + output, LogType.STATUS);
+
+                    // Calculate error
+                    int error = ORtrainingData[i][1][0] - output;
+
+                    // Increase error count for incorrect output
+                    if (error != 0)
+                    {
+                        errorCount++;
+                    }
+
+                    // Update weights
+                    for (int ii = 0; ii < ORtrainingData[i][0].Length; ii++)
+                    {
+                        weights[ii] += learningRate * error * ORtrainingData[i][0][ii];
+                    }
+
+                    Log("New weights: " + PrintWeights(weights) + "\n", LogType.RESULT);
+                }
+
+                // If there are no errors, stop
+                if (errorCount == 0)
+                {
+                    Log("Final weights: " + PrintWeights(weights), LogType.RESULT);
+                    Log("Learning finished !", LogType.STATUS);
+                    return;
+                }
+            }
+        }
+        #endregion
+
+
+
+
+
+
+
+
